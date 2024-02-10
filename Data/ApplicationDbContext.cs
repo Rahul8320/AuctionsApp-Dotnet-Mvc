@@ -1,4 +1,4 @@
-﻿using AuctionsApp.Models;
+﻿using AuctionsApp.Data.Entity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

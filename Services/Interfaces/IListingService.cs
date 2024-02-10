@@ -1,4 +1,4 @@
-﻿using AuctionsApp.Models;
+﻿using AuctionsApp.Data.Entity;
 
 namespace AuctionsApp.Services.Interfaces;
 

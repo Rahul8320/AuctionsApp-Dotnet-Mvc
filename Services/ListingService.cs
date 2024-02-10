@@ -1,5 +1,5 @@
 ﻿using AuctionsApp.Data;
-using AuctionsApp.Models;
+using AuctionsApp.Data.Entity;
 using AuctionsApp.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

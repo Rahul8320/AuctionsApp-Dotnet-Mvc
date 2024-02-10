@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AuctionsApp.Data;
-using AuctionsApp.Models;
 using AuctionsApp.Services.Interfaces;
+using AuctionsApp.Data.Entity;
 
 namespace AuctionsApp.Controllers;
 
@@ -38,11 +38,10 @@ public class ListingsController(IListingService listingService) : Controller
     //}
 
     // GET: Listings/Create
-    //public IActionResult Create()
-    //{
-    //    ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id");
-    //    return View();
-    //}
+    public IActionResult Create()
+    {
+        return View();
+    }
 
     // POST: Listings/Create
     // To protect from overposting attacks, enable the specific properties you want to bind to.

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace AuctionsApp.Models;
+namespace AuctionsApp.Data.Entity;
 
 public class Comment
 {
