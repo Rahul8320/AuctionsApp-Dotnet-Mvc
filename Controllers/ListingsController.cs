@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using AuctionsApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using AuctionsApp.Models;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AuctionsApp.Controllers;
 
@@ -13,10 +14,23 @@ public class ListingsController(IListingService listingService, IWebHostEnvironm
 
     // GET: Listings
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string searchString)
     {
-        var allListings = _listingService.GetAll();
-        return View(await allListings.ToListAsync());
+        try
+        {
+            var allListings = _listingService.GetAll();
+
+            if (!searchString.IsNullOrEmpty())
+            {
+                allListings = allListings.Where(u => u.Title.ToLower().Contains(searchString.ToLower()));
+            }
+
+            return View(await allListings.Where(u => u.IsSold == false).AsNoTracking().ToListAsync());
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     // GET: Listings/Details/5

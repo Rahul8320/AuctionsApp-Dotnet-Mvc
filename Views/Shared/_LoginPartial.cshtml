@@ -9,7 +9,7 @@
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><i class="fa-solid fa-user"></i> @User.Identity?.Name</a>
     </li>
     <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Listings", new { area = "" })">
                 <button type="submit" class="nav-link btn btn-link"><i class="fa-solid fa-right-from-bracket mx-1"></i>Logout</button>
         </form>
     </li>

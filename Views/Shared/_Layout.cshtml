@@ -35,6 +35,12 @@
                                 <a class="nav-link" asp-area="" asp-controller="Listings" asp-action="MyBids"><i class="fa fa-solid fa-sack-dollar mx-1"></i>My Bids</a>
                             </li>
                         }
+                        <li class="nav-item" style="margin:auto">
+                            <form asp-controller="Listings" asp-action="Index" method="get">
+                                <input style="width:80%;float:left;border-top-left-radius:20px;border-bottom-left-radius:20px;background:whitesmoke" type="text" name="searchString" />
+                                <button style="width:20px;float:left;border:none;background:transparent;" type="submit"><i class="fa fa-search mx-1"></i></button>
+                            </form>
+                        </li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
