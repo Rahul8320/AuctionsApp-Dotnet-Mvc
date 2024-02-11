@@ -7,11 +7,11 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Active Listing</h2>
+<h2 class="text-primary my-5">Active Listings</h2>
 
 @foreach(var listing in Model)
 {
-    <div class="container bg-secondary" style="margin-top: 50px; margin-bottom: 50px; padding: 20px; border-radius: 10px;">
+    <div class="container bg-light shadow-lg" style="margin-top: 50px; margin-bottom: 50px; padding: 20px; border-radius: 15px;">
         <div class="row">
             <div class="col col-xs-6 col-lg-5">
                 <img src="~/Images/@listing.ImagePath" style="max-width: 300px; max-height: 300px;"/>
@@ -30,17 +30,6 @@
                 <div>
                     Listed By: @listing.User?.UserName
                 </div>
-
-                @if (User.Identity!.IsAuthenticated)
-                {
-                    @if (userManager.GetUserId(User) == listing.User?.Id)
-                    {
-                        <div class="my-3">
-                            <a asp-action="Edit" asp-route-id="@listing.Id" class="btn btn-warning">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@listing.Id" class="btn btn-danger mx-3">Delete</a>
-                        </div>
-                    }
-                }
             </div>
         </div>
     </div>
