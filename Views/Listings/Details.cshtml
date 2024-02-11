@@ -46,7 +46,7 @@
             </div>
             @if (User.Identity.IsAuthenticated)
             {
-                <form asp-action="AddBid" method="post">
+                <form asp-controller="Bids" asp-action="AddBid" method="post">
                     <div>
                         Bid: $ <input type="number" min="@Model.Price" step="1" name="Price" placeholder="@Model.Price.ToString("N2")" />
                         <input type="hidden" class="form-control" name="IdentityUserId" value="@userManager.GetUserId(User)" />
