@@ -7,4 +7,5 @@ public interface IListingService
     IQueryable<Listing> GetAll();
     Task<Listing?> GetListing(int id);
     Task<bool> AddListing(Listing item);
+    Task<bool?> DeleteListing(int id);
 }

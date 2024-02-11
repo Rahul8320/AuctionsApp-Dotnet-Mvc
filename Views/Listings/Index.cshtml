@@ -28,6 +28,11 @@
                 <div>
                     Listed By: @listing.User?.UserName
                 </div>
+
+                <div class="my-3">
+                    <a asp-action="Edit" asp-route-id="@listing.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@listing.Id" class="btn btn-danger mx-3">Delete</a>
+                </div>
             </div>
         </div>
     </div>

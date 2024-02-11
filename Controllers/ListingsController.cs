@@ -85,21 +85,17 @@ public class ListingsController(IListingService listingService, IWebHostEnvironm
     }
 
     // GET: Listings/Edit/5
-    //public async Task<IActionResult> Edit(int? id)
-    //{
-    //    if (id == null)
-    //    {
-    //        return NotFound();
-    //    }
-
-    //    var listing = await _context.Listings.FindAsync(id);
-    //    if (listing == null)
-    //    {
-    //        return NotFound();
-    //    }
-    //    ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", listing.IdentityUserId);
-    //    return View(listing);
-    //}
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var listing = await _listingService.GetListing(id);
+        if (listing == null)
+        {
+            return NotFound();
+        }
+        return View(listing);
+    }
 
     // POST: Listings/Edit/5
     // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -138,38 +134,40 @@ public class ListingsController(IListingService listingService, IWebHostEnvironm
     //}
 
     // GET: Listings/Delete/5
-    //public async Task<IActionResult> Delete(int? id)
-    //{
-    //    if (id == null)
-    //    {
-    //        return NotFound();
-    //    }
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var listing = await _listingService.GetListing(id);
+        if (listing == null)
+        {
+            return NotFound();
+        }
 
-    //    var listing = await _context.Listings
-    //        .Include(l => l.User)
-    //        .FirstOrDefaultAsync(m => m.Id == id);
-    //    if (listing == null)
-    //    {
-    //        return NotFound();
-    //    }
-
-    //    return View(listing);
-    //}
+        return View(listing);
+    }
 
     // POST: Listings/Delete/5
-    //[HttpPost, ActionName("Delete")]
-    //[ValidateAntiForgeryToken]
-    //public async Task<IActionResult> DeleteConfirmed(int id)
-    //{
-    //    var listing = await _context.Listings.FindAsync(id);
-    //    if (listing != null)
-    //    {
-    //        _context.Listings.Remove(listing);
-    //    }
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    [Authorize]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        try
+        {
+            var listing = await _listingService.DeleteListing(id);
+            if (listing == null)
+            {
+                return NotFound();
+            }
 
-    //    await _context.SaveChangesAsync();
-    //    return RedirectToAction(nameof(Index));
-    //}
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 
     //private bool ListingExists(int id)
     //{
