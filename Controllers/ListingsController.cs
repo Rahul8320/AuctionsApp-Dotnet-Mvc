@@ -13,7 +13,6 @@ public class ListingsController(IListingService listingService, IWebHostEnvironm
 
     // GET: Listings
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> Index()
     {
         var allListings = _listingService.GetAll();
@@ -22,16 +21,22 @@ public class ListingsController(IListingService listingService, IWebHostEnvironm
 
     // GET: Listings/Details/5
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> Details(int id)
     {
-        var listing = await _listingService.GetListing(id);
-        if (listing == null)
+        try
         {
-            return NotFound();
-        }
+            var listing = await _listingService.GetListing(id);
+            if (listing == null)
+            {
+                return NotFound();
+            }
 
-        return View(listing);
+            return View(listing);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     // GET: Listings/Create
