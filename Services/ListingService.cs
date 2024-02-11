@@ -1,7 +1,7 @@
 ﻿using AuctionsApp.Data;
 using AuctionsApp.Data.Entity;
+using AuctionsApp.Models;
 using AuctionsApp.Services.Interfaces;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuctionsApp.Services;
@@ -11,10 +11,33 @@ public class ListingService(ApplicationDbContext context, IWebHostEnvironment we
     private readonly ApplicationDbContext _context = context;
     private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
-    public async Task<bool> AddListing(Listing item)
+    public async Task<bool> AddListing(ListingViewModel listing)
     {
-        _context.Listings.Add(item);
-        return await _context.SaveChangesAsync() != 0;
+        try
+        {
+            string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "Images");
+            long timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(); // Milliseconds since Unix epoch
+            string fileName = timestamp.ToString() + "_" + listing.Image.FileName;
+            string filePath = Path.Combine(uploadDir, fileName);
+            using var fileStream = new FileStream(filePath, FileMode.Create);
+            listing.Image.CopyTo(fileStream);
+
+            var listingObj = new Listing
+            {
+                Title = listing.Title,
+                Description = listing.Description,
+                Price = listing.Price,
+                IdentityUserId = listing.IdentityUserId,
+                ImagePath = fileName,
+            };
+
+            _context.Listings.Add(listingObj);
+            return await _context.SaveChangesAsync() != 0;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public async Task<bool?> DeleteListing(int id)

@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AuctionsApp.Data;
 using AuctionsApp.Services.Interfaces;
-using AuctionsApp.Data.Entity;
 using Microsoft.AspNetCore.Authorization;
 using AuctionsApp.Models;
 
@@ -53,35 +50,26 @@ public class ListingsController(IListingService listingService, IWebHostEnvironm
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(ListingViewModel listing)
     {
-        if(!ModelState.IsValid)
+        try
         {
+            if (!ModelState.IsValid)
+            {
+                return View(listing);
+            }
+
+            if (listing.Image != null)
+            {
+                await _listingService.AddListing(listing);
+
+                return RedirectToAction("Index");
+            }
+
             return View(listing);
         }
-
-        if (listing.Image != null)
+        catch (Exception ex)
         {
-            string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "Images");
-            long timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(); // Milliseconds since Unix epoch
-            string fileName = timestamp.ToString() + "_" + listing.Image.FileName;
-            string filePath = Path.Combine(uploadDir, fileName);
-            using var fileStream = new FileStream(filePath, FileMode.Create);
-            listing.Image.CopyTo(fileStream);
-
-            var listingObj = new Listing
-            {
-                Title = listing.Title,
-                Description = listing.Description,
-                Price = listing.Price,
-                IdentityUserId = listing.IdentityUserId,
-                ImagePath = fileName,
-            };
-
-            await _listingService.AddListing(listingObj);
-
-            return RedirectToAction("Index");
+            return BadRequest(ex.Message);
         }
-
-        return View(listing);
     }
 
     // GET: Listings/Edit/5
@@ -169,8 +157,4 @@ public class ListingsController(IListingService listingService, IWebHostEnvironm
         }
     }
 
-    //private bool ListingExists(int id)
-    //{
-    //    return _context.Listings.Any(e => e.Id == id);
-    //}
 }
