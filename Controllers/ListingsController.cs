@@ -4,6 +4,7 @@ using AuctionsApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using AuctionsApp.Models;
 using Microsoft.IdentityModel.Tokens;
+using AuctionsApp.Data.Entity;
 
 namespace AuctionsApp.Controllers;
 
@@ -14,18 +15,19 @@ public class ListingsController(IListingService listingService, IWebHostEnvironm
 
     // GET: Listings
     [HttpGet]
-    public async Task<IActionResult> Index(string searchString)
+    public async Task<IActionResult> Index(int? pageNumber, string searchString)
     {
         try
         {
             var allListings = _listingService.GetAll();
+            int pageSize = 1;
 
             if (!searchString.IsNullOrEmpty())
             {
                 allListings = allListings.Where(u => u.Title.ToLower().Contains(searchString.ToLower()));
             }
 
-            return View(await allListings.Where(u => u.IsSold == false).AsNoTracking().ToListAsync());
+            return View(await PaginatedList<Listing>.CreateAsync(allListings.Where(u => u.IsSold == false).AsNoTracking(), pageNumber ?? 1, pageSize));
         }
         catch (Exception ex)
         {

@@ -1,5 +1,5 @@
 ﻿@using AuctionsApp.Data.Entity
-@model List<Listing>
+@model PaginatedList<Listing>
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<IdentityUser> userManager
 
@@ -39,3 +39,20 @@
 {
     <p>No Active Listings</p>
 }
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<div class="d-flex justify-content-center">
+    <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" class="btn btn-default @prevDisabled">
+        Previous
+    </a>
+    <div class="btn" style="cursor: default">
+        Page @Model.PageIndex of @Model.TotalPages
+    </div>
+    <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" class="btn btn-default @nextDisabled">
+        Next
+    </a>
+</div>
