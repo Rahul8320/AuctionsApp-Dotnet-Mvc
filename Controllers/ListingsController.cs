@@ -8,9 +8,10 @@ using AuctionsApp.Data.Entity;
 
 namespace AuctionsApp.Controllers;
 
-public class ListingsController(IListingService listingService, IWebHostEnvironment webHostEnvironment) : Controller
+public class ListingsController(IListingService listingService, ICommentService commentService, IWebHostEnvironment webHostEnvironment) : Controller
 {
     private readonly IListingService _listingService = listingService;
+    private readonly ICommentService _commentService = commentService;
     private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
     // GET: Listings
@@ -171,6 +172,26 @@ public class ListingsController(IListingService listingService, IWebHostEnvironm
             }
 
             return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddComment([Bind("Id, Content, ListingId, IdentityUserId")] Comment comment)
+    {
+        try
+        {
+            if(ModelState.IsValid)
+            {
+                await _commentService.AddComment(comment);
+            }
+            var listing = await _listingService.GetListing(comment.ListingId);
+            return View("Details", listing);
         }
         catch (Exception ex)
         {
