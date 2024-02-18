@@ -89,10 +89,12 @@ public class ListingService(ApplicationDbContext context, IWebHostEnvironment we
         return allListings;
     }
 
-    public async Task<Listing?> GetListing(int id)
+    public async Task<Listing?> GetListing(int? id)
     {
         try
         {
+            if(id == null) return null;
+
             var listing = await _context.Listings
            .Include(l => l.User)
            .Include(l => l.Comments)
@@ -101,6 +103,18 @@ public class ListingService(ApplicationDbContext context, IWebHostEnvironment we
            .FirstOrDefaultAsync(m => m.Id == id);
 
             return listing;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task SaveChanges()
+    {
+        try
+        {
+            await _context.SaveChangesAsync();
         }
         catch (Exception)
         {
