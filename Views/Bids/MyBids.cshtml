@@ -1,32 +1,32 @@
 ﻿@using AuctionsApp.Data.Entity
-@model PaginatedList<Listing>
+@model PaginatedList<Bid>
 
 @{
-    ViewData["Title"] = "Active Listings";
+    ViewData["Title"] = "My Bids";
 }
 
-<h2 class="text-primary my-5">Active Listings</h2>
+<h2 class="text-primary my-5">My Bids</h2>
 
-@foreach(var listing in Model)
+@foreach (var bid in Model)
 {
     <div class="container bg-light shadow-lg" style="margin-top: 50px; margin-bottom: 50px; padding: 20px; border-radius: 15px;">
         <div class="row">
             <div class="col col-xs-6 col-lg-5">
-                <img src="~/Images/@listing.ImagePath" style="max-width: 300px; max-height: 300px;"/>
+                <img src="~/Images/@bid?.Listing?.ImagePath" style="max-width: 300px; max-height: 300px;" />
             </div>
 
             <div class="col col-xs-6 col-lg-7">
                 <h5>
-                    <a asp-action="Details" asp-route-id="@listing.Id" style="color: black;">@listing.Title</a>
+                    <a asp-controller="Listings" asp-action="Details" asp-route-id="@bid?.Listing?.Id" style="color: black;">@bid?.Listing?.Title</a>
                 </h5>
                 <div>
-                    @listing.Description
+                    @bid?.Listing?.Description
                 </div>
                 <div>
-                    Bid: $@listing.Price.ToString("N2")
+                    Bid: $@bid?.Listing?.Price.ToString("N2")
                 </div>
                 <div>
-                    Listed By: @listing.User?.UserName
+                    Listed By: @bid?.Listing?.User?.UserName
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@
 
 @if (!Model.Any())
 {
-    <p>No Active Listings</p>
+    <p>No Bids Made!</p>
 }
 
 @{
@@ -44,13 +44,13 @@
 }
 
 <div class="d-flex justify-content-center">
-    <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" class="btn btn-default @prevDisabled">
+    <a asp-action="MyBids" asp-route-pageNumber="@(Model.PageIndex - 1)" class="btn btn-default @prevDisabled">
         Previous
     </a>
     <div class="btn" style="cursor: default">
         Page @Model.PageIndex of @Model.TotalPages
     </div>
-    <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" class="btn btn-default @nextDisabled">
+    <a asp-action="MyBids" asp-route-pageNumber="@(Model.PageIndex + 1)" class="btn btn-default @nextDisabled">
         Next
     </a>
 </div>

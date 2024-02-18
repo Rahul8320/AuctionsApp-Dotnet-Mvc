@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using AuctionsApp.Models;
 using Microsoft.IdentityModel.Tokens;
 using AuctionsApp.Data.Entity;
+using System.Security.Claims;
 
 namespace AuctionsApp.Controllers;
 
@@ -21,7 +22,7 @@ public class ListingsController(IListingService listingService, ICommentService 
         try
         {
             var allListings = _listingService.GetAll();
-            int pageSize = 1;
+            int pageSize = 3;
 
             if (!searchString.IsNullOrEmpty())
             {
@@ -29,6 +30,23 @@ public class ListingsController(IListingService listingService, ICommentService 
             }
 
             return View(await PaginatedList<Listing>.CreateAsync(allListings.Where(u => u.IsSold == false).AsNoTracking(), pageNumber ?? 1, pageSize));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    // GET: MyListings
+    [HttpGet]
+    public async Task<IActionResult> MyListings(int? pageNumber)
+    {
+        try
+        {
+            var allListings = _listingService.GetAll();
+            int pageSize = 3;
+
+            return View("Index", await PaginatedList<Listing>.CreateAsync(allListings.Where(l => l.IdentityUserId == User.FindFirstValue(ClaimTypes.NameIdentifier)).AsNoTracking(), pageNumber ?? 1, pageSize));
         }
         catch (Exception ex)
         {

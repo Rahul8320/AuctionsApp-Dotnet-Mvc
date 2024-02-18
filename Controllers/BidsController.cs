@@ -1,7 +1,10 @@
 ﻿using AuctionsApp.Data.Entity;
+using AuctionsApp.Models;
 using AuctionsApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace AuctionsApp.Controllers;
 
@@ -37,5 +40,15 @@ public class BidsController(IBidService bidService, IListingService listingServi
         await _listingService.SaveChanges();
 
         return Redirect("/");
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> MyBids(int? pageNumber)
+    {
+        var allBids = _bidService.GetAllBids();
+        int pageSize = 3;
+
+        return View(await PaginatedList<Bid>.CreateAsync(allBids.Where(l => l.IdentityUserId == User.FindFirstValue(ClaimTypes.NameIdentifier)).AsNoTracking(), pageNumber ?? 1, pageSize));
     }
 }

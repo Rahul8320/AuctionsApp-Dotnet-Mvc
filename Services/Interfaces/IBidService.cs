@@ -5,4 +5,5 @@ namespace AuctionsApp.Services.Interfaces;
 public interface IBidService
 {
     Task AddBid(Bid bid);
+    IQueryable<Bid> GetAllBids();
 }
