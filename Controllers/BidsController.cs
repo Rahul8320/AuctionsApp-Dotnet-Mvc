@@ -27,4 +27,15 @@ public class BidsController(IBidService bidService, IListingService listingServi
 
         return BadRequest();
     }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> CloseBidding(int id)
+    {
+        var listing = await _listingService.GetListing(id);
+        listing!.IsSold = true;
+        await _listingService.SaveChanges();
+
+        return Redirect("/");
+    }
 }

@@ -51,7 +51,7 @@
                         Bid: $ <input type="number" min="@Model.Price" step="1" name="Price" placeholder="@Model.Price.ToString("N2")" />
                         <input type="hidden" class="form-control" name="IdentityUserId" value="@userManager.GetUserId(User)" />
                         <input type="hidden" class="form-control" name="ListingId" value="@Model.Id" />
-                        <input type="submit" class="btn btn-primary" />
+                        <input type="submit" disabled="@Model.IsSold" class="btn btn-primary" />
                     </div>
                 </form>
                 <p>Bids submitted: @Model.Bids?.Count</p>
@@ -93,7 +93,7 @@
                 {
                     @if(Model.IsSold == false)
                     {
-                        <a asp-action="CloseBidding" asp-route-id="@Model?.Id">Close Bidding</a>
+                        <a asp-controller="Bids" asp-action="CloseBidding" asp-route-id="@Model?.Id">Close Bidding</a>
                     }
                 }
             }
